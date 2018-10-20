@@ -5,6 +5,26 @@
 #TODO
 # ARN for nginx ingress is specified in env variable AWS_CERT_ARN=
 
+function test_command {
+    $1 2&>1
+    local status=$?
+    if [ $status -ne 0 ]; then
+        echo "error with $2, please verify that this is installed" >&2
+	exit 1
+    else
+	echo "$2 found..."
+    fi
+    return $status
+}
+
+# test for required binaries: test_command "command" "name"
+
+test_command "aws --version" "aws cli"
+test_command "aws-iam-authenticator help" "aws-iam-authenticator"
+test_command "kubectl version" "kubectl"
+test_command "jq --version" "jq"
+
+
 : ${AWS_REGION="us-east-1"}
 export TF_VAR_aws_region=$AWS_REGION
 
