@@ -97,3 +97,9 @@ EOF
 
 # create actual DNS entry via aws cli
 #aws route53 change-resource-record-sets --hosted-zone-id ${ELB_DOMAIN_HOSTED_ZONE} --change-batch file://dns.json
+
+# create rolebindings for tiller
+kubectl apply -f yaml/tiller-rbac.yaml 
+
+#initialize helm
+helm init
