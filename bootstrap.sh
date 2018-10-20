@@ -40,10 +40,14 @@ ELB_INGRESS_HOST="*"
 ELB_HOST=$ELB_INGRESS_HOST.$ELB_INGRESS_DOMAIN
 
 #pull hosted zone from domain and validate
-ELB_DOMAIN_HOSTED_ZONE="Z2D252C5RIIP8I"
+AWS_ZONE_OUTPUT=`aws route53 list-hosted-zones --query "HostedZones[?Name=='${ELB_INGRESS_DOMAIN}.'] | [].Id" | grep hostedzone | cut -d "/" -f 3 | sed s/\"//`
 
-#AWS ELB hosted zone to add DNS, computed
-ELB_AWS_HOSTED_ZONE="Z35SXDOTRQ7X7K"
+if [ -z "$AWS_ZONE_OUTPUT" ]; then
+    echo "The domain ${ELB_INGRESS_DOMAIN} is not an AWS hosted zone."
+    exit 1
+fi
+
+ELB_DOMAIN_HOSTED_ZONE=$AWS_ZONE_OUTPUT
 
 echo "AWS region: ${AWS_REGION}"
 echo "cluster name: ${CLUSTER_NAME}"
@@ -64,6 +68,9 @@ echo "hosted domain (${ELB_INGRESS_DOMAIN}): ${ELB_DOMAIN_HOSTED_ZONE}"
 
 # get ELB DNS name from cluster
 ELB_DNS=`kubectl get svc -n ingress-nginx -o json | jq '.items | .[] | .status.loadBalancer.ingress | .[] | .hostname'`
+
+#AWS ELB hosted zone to add DNS, computed
+ELB_AWS_HOSTED_ZONE="Z35SXDOTRQ7X7K"
 
 #output json file with ELB target, hosted zone, and hostname
 
