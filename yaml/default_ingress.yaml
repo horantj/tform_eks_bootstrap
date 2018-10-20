@@ -7,10 +7,10 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host:
+  - host: hello-world.gigantor.be
     http:
       paths:
       - path: /
         backend:
-          serviceName: foo
+          serviceName: hello-world
           servicePort: 80
