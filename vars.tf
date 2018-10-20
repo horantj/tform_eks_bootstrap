@@ -3,6 +3,6 @@ variable "cluster-name" {
   type    = "string"
 }
 
-variable "mgmt_ip" {
+variable "aws_region" {
   type    = "string"
 }
