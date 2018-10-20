@@ -37,7 +37,7 @@ cat <<EOF >dns.json
                 "Action": "CREATE",
                 "ResourceRecordSet": {
                   "Name": "${ELB_HOST}",
-                  "Type": "CNAME",
+                  "Type": "A",
                   "AliasTarget": {
                     "HostedZoneId": "${ELB_ZONE}",
                     "DNSName": ${ELB_DNS},
@@ -48,3 +48,6 @@ cat <<EOF >dns.json
             ]
           }
 EOF
+
+# create actual DNS entry via aws cli
+aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE} --change-batch file://dns.json
