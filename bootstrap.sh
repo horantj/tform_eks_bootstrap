@@ -5,6 +5,9 @@
 #TODO
 # ARN for nginx ingress is specified in env variable AWS_CERT_ARN=
 
+: ${AWS_REGION="us-east-1"}
+export TF_VAR_aws_region=$AWS_REGION
+
 #cluster name variable
 : ${CLUSTER_NAME="eks-cluster"}
 export TF_VAR_cluster_name=$CLUSTER_NAME
@@ -22,6 +25,7 @@ ELB_DOMAIN_HOSTED_ZONE="Z2D252C5RIIP8I"
 #AWS ELB hosted zone to add DNS, computed
 ELB_AWS_HOSTED_ZONE="Z35SXDOTRQ7X7K"
 
+echo "AWS region: ${AWS_REGION}"
 echo "cluster name: ${CLUSTER_NAME}"
 echo "ingress domain: ${ELB_INGRESS_DOMAIN}"
 echo "ingress hostname: ${ELB_HOST}"
