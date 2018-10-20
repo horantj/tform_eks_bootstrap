@@ -67,10 +67,10 @@ echo "hosted domain (${ELB_INGRESS_DOMAIN}): ${ELB_DOMAIN_HOSTED_ZONE}"
 # create route53 DNS alias for ELB
 
 # get ELB DNS name from cluster
-ELB_DNS=`kubectl get svc -n ingress-nginx -o json | jq '.items | .[] | .status.loadBalancer.ingress | .[] | .hostname'`
+ELB_DNS=`kubectl get svc -n ingress-nginx -o json | jq '.items | .[] | .status.loadBalancer.ingress | .[] | .hostname' | sed s/\"//g`
 
 #AWS ELB hosted zone to add DNS, computed
-ELB_AWS_HOSTED_ZONE=`aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='a60a82118d41011e888e60ababb0cb73-526929535.us-east-1.elb.amazonaws.com'] | [].CanonicalHostedZoneNameID" | egrep -v -e "\[|\]" | sed s/\"//g | sed -e 's/^[[:space:]]*//'`
+ELB_AWS_HOSTED_ZONE=`aws elb describe-load-balancers --query "LoadBalancerDescriptions[?DNSName=='${ELB_DNS}'] | [].CanonicalHostedZoneNameID" | egrep -v -e "\[|\]" | sed s/\"//g | sed -e 's/^[[:space:]]*//'`
 
 #output json file with ELB target, hosted zone, and hostname
 
@@ -85,7 +85,7 @@ cat <<EOF >dns.json
                   "Type": "A",
                   "AliasTarget": {
                     "HostedZoneId": "${ELB_AWS_HOSTED_ZONE}",
-                    "DNSName": ${ELB_DNS},
+                    "DNSName": "${ELB_DNS}",
                     "EvaluateTargetHealth": false
                   }
                 }
