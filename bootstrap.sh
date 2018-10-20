@@ -103,3 +103,6 @@ kubectl apply -f yaml/tiller-rbac.yaml
 
 #initialize helm
 helm init
+
+#deploy nginx app that will listen at any hostname/hello
+helm install ./charts/hello-world
