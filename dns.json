@@ -1,0 +1,17 @@
+          {
+            "Comment": "create route53 DNS alias for ELB",
+            "Changes": [
+              {
+                "Action": "CREATE",
+                "ResourceRecordSet": {
+                  "Name": "*.gigantor.be",
+                  "Type": "A",
+                  "AliasTarget": {
+                    "HostedZoneId": "",
+                    "DNSName": "",
+                    "EvaluateTargetHealth": false
+                  }
+                }
+              }
+            ]
+          }
